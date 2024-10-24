@@ -1,3 +1,4 @@
+import pygame
 from npc1 import *
 
 
