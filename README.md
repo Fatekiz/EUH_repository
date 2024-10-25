@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/badge/Status-En%20Desarrollo-green?style=plastic">
    <img src="https://img.shields.io/badge/Python-3776AB?style=plastic&logo=python&logoColor=white"/>
 
-<img src="assets/images/euh_prototipo.jpg"/> 
+<img src="assets/images/euh_prototipo.jpg" width="50%" /> 
 <hr> 
 
 ## Motivo
