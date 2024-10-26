@@ -7,7 +7,12 @@
 <img src="assets/images/euh_prototipo.jpg" width="40%" /> 
 <hr> 
 
-## Motivo
+## ¿Qué es?
 
-Aquí estaré subiendo las clases sobre pygames que nos irá enseñando el docente "Victor Saldivia", donde aprenderemos lo básico de la libreria pygame
-para poder desarrollar el proyecto del segundo semestre de mi carrera en POO: "videojuego en pygame".
+Repositorio creado con el fin de llevar un seguimiento en nuestro proyecto de videojuego
+realizado por los estudiantes afiliados a este repositorio.
+
+### ¿cómo lo hacemos?
+
+Este videojuego está siendo desarrollado con el lenguaje "Python"
+ocupando la libreria pygmame.
