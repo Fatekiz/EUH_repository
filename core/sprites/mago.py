@@ -1,15 +1,19 @@
-# Trabajado por benja
+from boss_golem import golem
 
-class Mago():
+class Wizzard():
     def __init__(self,name,health,dmg,speed):
         self.name = name
         self.health = health
-        self.dmg = dmg     # dmg de damage <-- daño
+        self.dmg = dmg
         self.speed = speed
 
-    def attack(self,object):
-        object.health -= self.dmg 
-        print(f"El jugador {self.name} ha atacado a {object.name}, la vida del enemigo se redujo a {object.name}")
+        # Métodos
+    def attack(self,objetivo):
+        objetivo.health -= self.dmg
+        print(f"El enemigo '{objetivo.name}' ha sido atacado por tí, su vida ha disminuído ha {objetivo.health}. ")
 
-# Creando el objeto
-benja = Mago("benja",75,25,8)
+# Creación
+mago = Wizzard("Benja",75,40,8)
+
+# método
+mago.attack(golem)
