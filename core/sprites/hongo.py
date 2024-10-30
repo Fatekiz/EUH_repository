@@ -1,7 +1,9 @@
 import random
 import pygame
 
-class Skeleton(pygame.sprite.Sprite):
+
+
+class Hongo(pygame.sprite.Sprite):
     def __init__(self,image_path, speed, position=(0,0)):
         self.image = pygame.image.load(image_path)
         self.image_x2= pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() *2.5))
@@ -9,7 +11,7 @@ class Skeleton(pygame.sprite.Sprite):
         self.speed = speed
 
         # Tiempo para cambiar de dirección (en milisegundos)
-        self.change_direction_time = 3000  # Cambia cada 2 segundos
+        self.change_direction_time = random.randint(3000,7000)  # Cambia cada 2 segundos
         self.last_change = pygame.time.get_ticks()  # Marca el tiempo actual
 
         # Dirección inicial aleatoria

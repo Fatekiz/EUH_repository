@@ -20,17 +20,17 @@ def main():
     screen = pygame.display.set_mode((win_x,win_y))
     brujo1=Healer(imagen_healer_x2,200,30,5)
 
-    num_skeletons=10
+    num_skeletons=30
     skeletons=[]
     for i in range(num_skeletons):
-        x= Skeleton("assets/images/señor hongo.gif", speed= 1, position=(random.randint(0, 800), random.randint(0, 600)))
+        x= Hongo("assets/images/señor hongo.gif", speed= 1, position=(random.randint(0, 800), random.randint(0, 600)))
         skeletons.append(x)
 
 
 
 
     pygame.draw.rect(screen,BLANCO,((win_x//2)-20,(win_y//2)-20,40,40))
-    pygame.display.set_caption("GAME")
+    pygame.display.set_caption("EL ULTIMO HEROE.")
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -54,7 +54,7 @@ def main():
 
 
         fps.tick(60)
-        pygame.display.flip() 
+        pygame.display.flip()
         
 
 main()
