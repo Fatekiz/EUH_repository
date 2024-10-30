@@ -2,7 +2,7 @@ import pygame
 import sys
 from config.settings import *
 from core.sprites.healer import *
-from core.sprites.skeleton import *
+from core.sprites.hongo import *
 from core.map import *
 
 
@@ -18,13 +18,13 @@ def main():
 
     fps= pygame.time.Clock()
     screen = pygame.display.set_mode((win_x,win_y))
-    brujo1=Healer(imagen_healer_x2,200,30,5)
+    healer1=Healer(imagen_healer_x2,200,30,5)
 
-    num_skeletons=30
-    skeletons=[]
-    for i in range(num_skeletons):
+    num_hongos=30
+    hongos=[]
+    for i in range(num_hongos):
         x= Hongo("assets/images/señor hongo.gif", speed= 1, position=(random.randint(0, 800), random.randint(0, 600)))
-        skeletons.append(x)
+        hongos.append(x)
 
 
 
@@ -37,20 +37,18 @@ def main():
                 sys.exit()
 
 
-
-
-
-
+        # Se dibujan el mapa y los personajes.
         mapa.dibujar(screen)
-        brujo1.dibujar(screen)
+        healer1.dibujar(screen)
 
-        for npc in skeletons:
-            npc.update()
+        for npc in hongos:
+            npc.update() #Movimiento de los npc hongos
             npc.dibujar(screen)
+        
 
-
+        #Se llama al movimiento del healer
         keys = pygame.key.get_pressed()
-        brujo1.movimiento(keys)
+        healer1.movimiento(keys)
 
 
         fps.tick(60)
