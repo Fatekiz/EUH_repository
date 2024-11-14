@@ -5,6 +5,7 @@ import pygame
 
 class Hongo(pygame.sprite.Sprite):
     def __init__(self,image_path, speed, position=(0,0)):
+        super().__init__()
         self.image = pygame.image.load(image_path)
         self.image_x2= pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() *2.5))
         self.rect = self.image.get_rect(topleft=position)  # Rectángulo para la posición y colisiones
