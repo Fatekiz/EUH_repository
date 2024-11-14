@@ -11,20 +11,20 @@ def main():
 
     ###LOADS IMAGES
     imagen_healer=pygame.image.load("assets/images/skye.gif")
-    imagen_healer_x2=pygame.transform.scale(imagen_healer, (imagen_healer.get_width() * 2.5, imagen_healer.get_height() *2.5))
+    imagen_healer_x2=pygame.transform.scale(imagen_healer, (imagen_healer.get_width() * 2, imagen_healer.get_height() *2))
     
     mapa= Map("assets/images/mapa.png",scale=(win_x,win_y))
     
 
     fps= pygame.time.Clock()
     screen = pygame.display.set_mode((win_x,win_y))
-    healer1=Healer(imagen_healer_x2,200,30,5)
+    healer1=Healer(imagen_healer_x2,200,30,5) # personaje
 
     num_hongos=30
-    hongos=[]
+    hongos = pygame.sprite.Group() # <-- Grupo de npcs
     for i in range(num_hongos):
-        x= Hongo("assets/images/señor hongo.gif", speed= 1, position=(random.randint(0, 800), random.randint(0, 600)))
-        hongos.append(x)
+        hongo = Hongo("assets/images/señor hongo.gif", speed= 1, position=(random.randint(0, 800), random.randint(0, 600)))
+        hongos.add(hongo)
 
 
 
@@ -44,12 +44,16 @@ def main():
         for npc in hongos:
             npc.update() #Movimiento de los npc hongos
             npc.dibujar(screen)
+
         
 
         #Se llama al movimiento del healer
         keys = pygame.key.get_pressed()
         healer1.movimiento(keys)
 
+        for npc in pygame.sprite.spritecollide(healer1, hongos, False):
+            if keys[pygame.K_e]:
+                npc.kill()
 
         fps.tick(60)
         pygame.display.flip()
