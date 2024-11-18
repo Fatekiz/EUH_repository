@@ -1,7 +1,7 @@
 import pygame
 import sys
 from config.settings import *
-from core.sprites.healer import *
+from core.sprites.guerrero import *
 from core.sprites.hongo import *
 from core.map import *
 
@@ -10,22 +10,22 @@ def main():
     pygame.init()
 
     ###LOADS IMAGES
-    imagen_healer=pygame.image.load("assets/images/skye.gif")
-    imagen_healer_x2=pygame.transform.scale(imagen_healer, (imagen_healer.get_width() * 2, imagen_healer.get_height() *2))
+    sprite_warrior=pygame.image.load("assets/images/personajes/warrior.pos1.png")
+    sprite_warrior_x2=pygame.transform.scale(sprite_warrior, (sprite_warrior.get_width() * 2, sprite_warrior.get_height() *2.5))
     
     mapa= Map("assets/images/mapa.png",scale=(win_x,win_y))
     
 
     fps= pygame.time.Clock()
     screen = pygame.display.set_mode((win_x,win_y))
-    healer1=Healer(imagen_healer_x2,200,30,5) # personaje
+    jhonny = Warrior(sprite_warrior_x2,health=100, dmg= 15, speed= 5) # personaje
 
-    num_hongos=30
-    hongos = pygame.sprite.Group() # <-- Grupo de npcs
-    for i in range(num_hongos):
-        hongo = Hongo("assets/images/señor hongo.gif", speed= 1, position=(random.randint(0, 800), random.randint(0, 600)))
+    
+    hongo_image = pygame.image.load("assets/images/señor hongo.gif")
+    hongos = pygame.sprite.Group()
+    for i in range(20):
+        hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
         hongos.add(hongo)
-
 
 
 
@@ -36,24 +36,30 @@ def main():
             if event.type == pygame.QUIT:
                 sys.exit()
 
-
-        # Se dibujan el mapa y los personajes.
+        # Dibujar mapa y personajes
         mapa.dibujar(screen)
-        healer1.dibujar(screen)
-
+        jhonny.dibujar(screen)
         for npc in hongos:
-            npc.update() #Movimiento de los npc hongos
             npc.dibujar(screen)
 
-        
+        # Actualizar y dibujar hongos
+        hongos.update()
+        hongos.draw(screen)
 
-        #Se llama al movimiento del healer
+        # Detectar colisiones entre la espada y los hongos
         keys = pygame.key.get_pressed()
-        healer1.movimiento(keys)
+        if keys[pygame.K_e]:  
+            for npc in hongos:
+                if jhonny.sword.colliderect(npc.rect):
+                    npc.recibir_daño(jhonny.dmg)
 
-        for npc in pygame.sprite.spritecollide(healer1, hongos, False):
-            if keys[pygame.K_e]:
-                npc.kill()
+        for npc in hongos:
+            if jhonny.rect.colliderect(npc.rect):
+                jhonny.recibir_daño(npc.dmg)
+
+
+        # Movimiento del personaje
+        jhonny.movimiento(keys)
 
         fps.tick(60)
         pygame.display.flip()
