@@ -17,12 +17,9 @@ class Personaje(pygame.sprite.Sprite):
         self.health -= cantidad
         if self.health <= 0:
             self.health = 0
-            self.morir()
+            return "1"
+        
 
-    def morir(self):
-        """Acción cuando el personaje muere."""
-        print(f"{self.__class__.__name__} ha muerto.")
-        self.kill()
 
     def dibujar(self, superficie):
         """Dibuja la imagen del personaje y la barra de salud."""

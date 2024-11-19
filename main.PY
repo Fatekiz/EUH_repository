@@ -37,6 +37,14 @@ boton_play_rect = boton_play_img.get_rect(center=(640, 500))  # Posición del bo
 pygame.draw.rect(screen,BLANCO,((win_x//2)-20,(win_y//2)-20,40,40))
 pygame.display.set_caption("EL ULTIMO HEROE.")
 
+fondo_menu_final= pygame.image.load("assets/images/menu_final.png")
+boton_play_img2 = pygame.image.load("assets/images/boton_reintentar.png")  # Imagen del botón "Play"
+boton_play_rect2 = boton_play_img.get_rect(center=(540, 800))  # Posición del botón
+
+
+
+
+
 
 def mostrar_menu():
     while True:
@@ -58,6 +66,11 @@ def mostrar_menu():
 
         # Actualizar la screen
         pygame.display.update()
+
+
+
+
+
 
 
 def main():
@@ -87,17 +100,42 @@ def main():
                     if bananirou.sword.colliderect(npc.rect):
                         npc.recibir_daño(bananirou.dmg)
                         ultimo_ataque = tiempo_actual
+                        
+
 
         for npc in hongos:
             if bananirou.rect.colliderect(npc.rect):
                 bananirou.recibir_daño(npc.dmg)
+                if bananirou.health<=0:
+                    menu_final()
 
         # Movimiento del personaje
         bananirou.movimiento(keys)
-
         pygame.display.flip()
         fps.tick(60)
 
+
+def menu_final():
+    while True:
+        screen.blit(fondo_menu_final, (0, 0))  # Dibujar la imagen de fondo del menú
+
+        # Detectar eventos
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                # Verificar si el clic está dentro del área del botón
+                if boton_play_rect2.collidepoint(evento.pos):  # Si el clic está dentro del botón
+                    return True
+                
+
+        # Dibujar el botón "Play" centrado
+        screen.blit(boton_play_img2, boton_play_rect2)
+
+        # Actualizar la screen
+        pygame.display.update()
 
         
 mostrar_menu()
