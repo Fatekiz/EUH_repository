@@ -13,11 +13,10 @@ sprite_warrior_x2=pygame.transform.scale(sprite_warrior, (sprite_warrior.get_wid
 
 mapa= Map("assets/images/mapa1.png",scale=(win_x,win_y))
 
-
-
     # Variables para el cooldown
 cooldown = 1000  # CD ATAQUE 
-ultimo_ataque = 0  # Al principio no ha habido ataques
+
+ultimo_ataque= 0  # Al principio no ha habido ataques
 
 fps= pygame.time.Clock()
 screen = pygame.display.set_mode((win_x,win_y))
@@ -84,7 +83,8 @@ def main():
 
 
 
-
+        global ultimo_ataque
+        
         if keys[pygame.K_e]:
         # Verificar si ha pasado el cooldown
             if tiempo_actual - ultimo_ataque >= cooldown:
