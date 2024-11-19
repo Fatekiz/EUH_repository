@@ -1,8 +1,8 @@
 import pygame
 import sys
 from config.settings import *
-from core.sprites.guerrero import *
-from core.sprites.hongo import *
+from core.Classes.guerrero import *
+from core.Classes.hongo import *
 from core.map import *
 
 pygame.init()
@@ -84,7 +84,7 @@ def main():
 
 
         global ultimo_ataque
-        
+
         if keys[pygame.K_e]:
         # Verificar si ha pasado el cooldown
             if tiempo_actual - ultimo_ataque >= cooldown:
