@@ -1,4 +1,4 @@
-class Boss_golem():
+class Boss_Dragon():
     def __init__(self,name,health,dmg,speed):
         self.name = name
         self.health = health
@@ -9,4 +9,4 @@ class Boss_golem():
     def attack(self,objetivo):
         pass
 
-golem = Boss_golem("golem",200,55,5)
+dragon = Boss_Dragon("golem",200,55,5)

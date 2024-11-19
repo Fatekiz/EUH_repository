@@ -9,7 +9,6 @@ pygame.init()
 
 ###LOADS IMAGES
 sprite_warrior=pygame.image.load("assets/images/personajes/warrior.pos1.png")
-sprite_warrior_x2=pygame.transform.scale(sprite_warrior, (sprite_warrior.get_width() * 2, sprite_warrior.get_height() *2.5))
 
 mapa= Map("assets/images/mapa1.png",scale=(win_x,win_y))
 
@@ -20,7 +19,7 @@ ultimo_ataque= 0  # Al principio no ha habido ataques
 
 fps= pygame.time.Clock()
 screen = pygame.display.set_mode((win_x,win_y))
-bananirou = Warrior(sprite_warrior_x2,health=100, dmg= 15, speed= 5) # personaje
+bananirou = Warrior(sprite_warrior,health=100, dmg= 15, speed= 5) # personaje
 
 
 hongo_image = pygame.image.load("assets/images/señor hongo.gif")
@@ -62,7 +61,6 @@ def mostrar_menu():
 
 
 def main():
-    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -71,24 +69,20 @@ def main():
         # Dibujar mapa y personajes
         mapa.dibujar(screen)
         bananirou.dibujar(screen)
-        for npc in hongos:
-            npc.dibujar(screen)
+        bananirou.dibujar_barra_salud(screen)
 
         # Actualizar y dibujar hongos
         hongos.update()
-        hongos.draw(screen)
-        tiempo_actual= pygame.time.get_ticks()
-        # Detectar colisiones entre la espada y los hongos
+        for hongo in hongos:
+            hongo.dibujar(screen)
+
+        # Detectar colisiones
         keys = pygame.key.get_pressed()
-
-
-
         global ultimo_ataque
+        tiempo_actual = pygame.time.get_ticks()
 
         if keys[pygame.K_e]:
-        # Verificar si ha pasado el cooldown
             if tiempo_actual - ultimo_ataque >= cooldown:
-                # Realizar el ataque
                 for npc in hongos:
                     if bananirou.sword.colliderect(npc.rect):
                         npc.recibir_daño(bananirou.dmg)
@@ -98,12 +92,13 @@ def main():
             if bananirou.rect.colliderect(npc.rect):
                 bananirou.recibir_daño(npc.dmg)
 
-
         # Movimiento del personaje
         bananirou.movimiento(keys)
 
-        fps.tick(60)
         pygame.display.flip()
+        fps.tick(60)
+
+
         
 mostrar_menu()
 main()
