@@ -7,8 +7,11 @@ class Warrior(Personaje):
         self.sword = pygame.Rect(0, 0, 25, 8)  # Espada del guerrero
         self.sword_direction = "right"  # Dirección inicial de la espada
 
-    def movimiento(self, keys):
-        """Movimiento del guerrero y posición de la espada."""
+    def movimiento(self, keys, paredes ):
+        """Movimiento del guerrero, posición de la espada y colisiones"""
+
+        posicion_original = self.rect.copy()
+
         if keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
             self.sword.topleft = (
@@ -40,6 +43,13 @@ class Warrior(Personaje):
                 self.rect.y + self.rect.height - 5
             )
             self.sword_direction = "down"
+
+        
+        # detectar colisiones con paredes
+        for pared in paredes:
+            if self.rect.colliderect(pared):
+                #volver a la posicion si detecta colisión
+                self.rect = posicion_original
 
     def dibujar(self, superficie):
         """Dibuja al guerrero y su espada."""

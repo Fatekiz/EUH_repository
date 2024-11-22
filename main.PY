@@ -46,6 +46,8 @@ boton_play_rect2 = boton_play_img.get_rect(center=(540, 800))  # Posición del b
 
 
 
+
+
 def mostrar_menu():
     while True:
         screen.blit(fondo_menu, (0, 0))  # Dibujar la imagen de fondo del menú
@@ -71,9 +73,39 @@ def mostrar_menu():
 
 
 
-
+# orden = pygame.Rect(x,y,ancho,largo)
 
 def main():
+    global bananirou, hongos  # Si son variables globales
+
+    # Reinicia al jugador
+    bananirou = Warrior(sprite_warrior, health=100, dmg=15, speed=5)
+
+    # Reinicia los hongos
+    global hongos
+    hongos = pygame.sprite.Group()
+    for i in range(20):
+        hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
+        hongos.add(hongo)
+
+    # Define las paredes del mapa
+    paredes = [
+        pygame.Rect(0, 105, 40, 50),  # Pared TOP 1
+        pygame.Rect(40, -80, 230, 50),  # Pared TOP 1.1
+        pygame.Rect(260, 105, 230, 50),  # Pared TOP 2
+        pygame.Rect(480, -80, 300, 50),  # Pared TOP 2.1
+        pygame.Rect(776, 105, 600, 50),  # Pared TOP 3
+        pygame.Rect(-10, -30, 50, 140),  # Pared TOP_LEFT 1
+        pygame.Rect(260, -30, 50, 140),  # Pared TOP_LEFT 2
+        pygame.Rect(440, -30, 50, 140),  # Pared TOP_RIGHT 1
+        pygame.Rect(776, -30, 50, 140),  # Pared TOP_RIGHT 2
+        pygame.Rect(1150, 0, 50, 580),  # Pared RIGHT 1
+        pygame.Rect(1150, 800, 50, 580),  # Pared RIGHT 2
+        pygame.Rect(-70, 0, 50, 960),  # Pared LEFT 1
+        pygame.Rect(0, 960,1280, 50),  # Pared DOWN 2
+    ]
+
+    # Bucle principal del juego
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -83,6 +115,11 @@ def main():
         mapa.dibujar(screen)
         bananirou.dibujar(screen)
         bananirou.dibujar_barra_salud(screen)
+
+        """" Dibujar paredes (DEPURACIÓN)"""
+        #for pared in paredes:
+            #pygame.draw.rect(screen, (255, 0, 0), pared)
+        
 
         # Actualizar y dibujar hongos
         hongos.update()
@@ -100,23 +137,24 @@ def main():
                     if bananirou.sword.colliderect(npc.rect):
                         npc.recibir_daño(bananirou.dmg)
                         ultimo_ataque = tiempo_actual
-                        
-
 
         for npc in hongos:
             if bananirou.rect.colliderect(npc.rect):
                 bananirou.recibir_daño(npc.dmg)
-                if bananirou.health<=0:
+                if bananirou.health <= 0:
                     menu_final()
 
         # Movimiento del personaje
-        bananirou.movimiento(keys)
+        bananirou.movimiento(keys, paredes)
         pygame.display.flip()
         fps.tick(60)
 
 
+
 def menu_final():
     while True:
+
+        boton_play_rect2 = boton_play_img2.get_rect(center=(640, 650))
         screen.blit(fondo_menu_final, (0, 0))  # Dibujar la imagen de fondo del menú
 
         # Detectar eventos
@@ -128,14 +166,14 @@ def menu_final():
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 # Verificar si el clic está dentro del área del botón
                 if boton_play_rect2.collidepoint(evento.pos):  # Si el clic está dentro del botón
-                    return True
-                
+                    main()  # Reinicia el juego
 
-        # Dibujar el botón "Play" centrado
+        # Dibujar el botón "Reintentar"
         screen.blit(boton_play_img2, boton_play_rect2)
 
-        # Actualizar la screen
+        # Actualizar la pantalla
         pygame.display.update()
+
 
         
 mostrar_menu()
