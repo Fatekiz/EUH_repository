@@ -4,7 +4,7 @@ from core.Classes.personaje import Personaje
 class Warrior(Personaje):
     def __init__(self, img, health, dmg, speed, position=(100, 100)):
         super().__init__(img, health, dmg, speed, position)
-        self.sword = pygame.Rect(0, 0, 25, 8)  # Espada del guerrero
+        self.sword = pygame.Rect(0, 0, 80, 8)  # Espada del guerrero
         self.sword_direction = "right"  # Dirección inicial de la espada
 
     def movimiento(self, keys, paredes ):

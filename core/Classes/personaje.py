@@ -12,13 +12,20 @@ class Personaje(pygame.sprite.Sprite):
         self.dmg = dmg
         self.speed = speed
 
-    def recibir_daño(self, cantidad):
+    def recibir_daño_personaje(self, cantidad):
         """Reduce la salud del personaje."""
         self.health -= cantidad
         if self.health <= 0:
             self.health = 0
             return "1"
         
+
+    def recibir_daño_npc(self, cantidad):
+        """Reduce la salud del personaje."""
+        self.health -= cantidad
+        if self.health <= 0:
+            self.health = 0
+            self.morir()
 
 
     def dibujar(self, superficie):

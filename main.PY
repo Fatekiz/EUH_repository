@@ -135,12 +135,12 @@ def main():
             if tiempo_actual - ultimo_ataque >= cooldown:
                 for npc in hongos:
                     if bananirou.sword.colliderect(npc.rect):
-                        npc.recibir_daño(bananirou.dmg)
+                        npc.recibir_daño_npc(bananirou.dmg)
                         ultimo_ataque = tiempo_actual
 
         for npc in hongos:
             if bananirou.rect.colliderect(npc.rect):
-                bananirou.recibir_daño(npc.dmg)
+                bananirou.recibir_daño_personaje(npc.dmg)
                 if bananirou.health <= 0:
                     menu_final()
 
