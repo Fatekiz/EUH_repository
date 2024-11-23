@@ -13,6 +13,7 @@ class Warrior(Personaje):
         posicion_original = self.rect.copy()
 
         if keys[pygame.K_LEFT]:
+            
             self.rect.x -= self.speed
             self.sword.topleft = (
                 self.rect.x - self.sword.width + 13,
@@ -21,6 +22,7 @@ class Warrior(Personaje):
             self.sword_direction = "left"
 
         if keys[pygame.K_RIGHT]:
+            
             self.rect.x += self.speed
             self.sword.topleft = (
                 self.rect.x + self.rect.width - 13,
@@ -29,13 +31,14 @@ class Warrior(Personaje):
             self.sword_direction = "right"
 
         if keys[pygame.K_UP]:
+
             self.rect.y -= self.speed
             self.sword.topleft = (
                 self.rect.x + self.rect.width // 2 - self.sword.width // 2,
                 self.rect.y - self.sword.height + 5
             )
             self.sword_direction = "up"
-
+            
         if keys[pygame.K_DOWN]:
             self.rect.y += self.speed
             self.sword.topleft = (
@@ -43,6 +46,7 @@ class Warrior(Personaje):
                 self.rect.y + self.rect.height - 5
             )
             self.sword_direction = "down"
+            
 
         
         # detectar colisiones con paredes

@@ -1,5 +1,5 @@
 import pygame
-
+import time
 class Personaje(pygame.sprite.Sprite):
     def __init__(self, img, health, dmg, speed, position=(0, 0)):
         super().__init__()
@@ -11,13 +11,19 @@ class Personaje(pygame.sprite.Sprite):
         self.max_health = health
         self.dmg = dmg
         self.speed = speed
+        self.last_damage_time = 0  # Guarda el tiempo del último daño recibido
+        self.damage_cooldown = 1  # Cooldown en segundos entre daños
 
     def recibir_daño_personaje(self, cantidad):
-        """Reduce la salud del personaje."""
-        self.health -= cantidad
-        if self.health <= 0:
-            self.health = 0
-            return "1"
+        """Reduce la salud del personaje si ha pasado el cooldown."""
+        tiempo_actual = time.time()
+        if tiempo_actual - self.last_damage_time >= self.damage_cooldown:
+            self.health -= cantidad
+            self.last_damage_time = tiempo_actual  # Actualiza el último tiempo de daño
+            if self.health <= 0:
+                self.health = 0
+                return "1"  # Devuelve "1" si el personaje muere
+        return "0"
         
 
     def recibir_daño_npc(self, cantidad):
