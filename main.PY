@@ -99,7 +99,7 @@ def main():
         pygame.Rect(260, -30, 50, 140),  # Pared TOP_LEFT 2
         pygame.Rect(440, -30, 50, 140),  # Pared TOP_RIGHT 1
         pygame.Rect(776, -30, 50, 140),  # Pared TOP_RIGHT 2
-        pygame.Rect(1150, 0, 50, 580),  # Pared RIGHT 1
+        pygame.Rect(1150, 0, 50, 580),  # Pared RIGHT 1saae
         pygame.Rect(1150, 800, 50, 580),  # Pared RIGHT 2
         pygame.Rect(-70, 0, 50, 960),  # Pared LEFT 1
         pygame.Rect(0, 960,1280, 50),  # Pared DOWN 2
@@ -134,7 +134,10 @@ def main():
         if keys[pygame.K_e]:
             if tiempo_actual - ultimo_ataque >= cooldown:
                 for npc in hongos:
-                    if bananirou.sword.colliderect(npc.rect):
+                    if bananirou.horizontal_sword.colliderect(npc.rect):
+                        npc.recibir_daño_npc(bananirou.dmg)
+                        ultimo_ataque = tiempo_actual
+                    elif bananirou.vertical_sword.colliderect(npc.rect):
                         npc.recibir_daño_npc(bananirou.dmg)
                         ultimo_ataque = tiempo_actual
 

@@ -4,7 +4,8 @@ from core.Classes.personaje import Personaje
 class Warrior(Personaje):
     def __init__(self, img, health, dmg, speed, position=(100, 100)):
         super().__init__(img, health, dmg, speed, position)
-        self.sword = pygame.Rect(0, 0, 80, 8)  # Espada del guerrero
+        self.horizontal_sword = pygame.Rect(0, 0, 35, 8)  # Espada del guerrero cuando se mueve a los lados
+        self.vertical_sword = pygame.Rect(0, 0, 8, 35) # Espada del guerrero cuando se mueve hacia arriba o abajo
         self.sword_direction = "right"  # Dirección inicial de la espada
 
     def movimiento(self, keys, paredes ):
@@ -12,42 +13,38 @@ class Warrior(Personaje):
 
         posicion_original = self.rect.copy()
 
-        if keys[pygame.K_LEFT]:
-            
+        if keys[pygame.K_a]:  # Izquierda
             self.rect.x -= self.speed
-            self.sword.topleft = (
-                self.rect.x - self.sword.width + 13,
-                self.rect.y + self.rect.height // 2 - self.sword.height // 2
+            self.horizontal_sword.topleft = (
+                self.rect.x - self.horizontal_sword.width + 13,
+                self.rect.y + self.rect.height // 2 - self.horizontal_sword.height // 2
             )
             self.sword_direction = "left"
 
-        if keys[pygame.K_RIGHT]:
-            
+        if keys[pygame.K_d]:  # Derecha
             self.rect.x += self.speed
-            self.sword.topleft = (
+            self.horizontal_sword.topleft = (
                 self.rect.x + self.rect.width - 13,
-                self.rect.y + self.rect.height // 2 - self.sword.height // 2
+                self.rect.y + self.rect.height // 2 - self.horizontal_sword.height // 2
             )
             self.sword_direction = "right"
 
-        if keys[pygame.K_UP]:
-
+        if keys[pygame.K_w]:  # Arriba
             self.rect.y -= self.speed
-            self.sword.topleft = (
-                self.rect.x + self.rect.width // 2 - self.sword.width // 2,
-                self.rect.y - self.sword.height + 5
+            self.vertical_sword.topleft = (
+                self.rect.x + self.rect.width // 2 - self.vertical_sword.width // 2,
+                self.rect.y - self.vertical_sword.height + 5
             )
             self.sword_direction = "up"
-            
-        if keys[pygame.K_DOWN]:
+
+        if keys[pygame.K_s]:  # Abajo
             self.rect.y += self.speed
-            self.sword.topleft = (
-                self.rect.x + self.rect.width // 2 - self.sword.width // 2,
+            self.vertical_sword.topleft = (
+                self.rect.x + self.rect.width // 2 - self.vertical_sword.width // 2,
                 self.rect.y + self.rect.height - 5
             )
             self.sword_direction = "down"
             
-
         
         # detectar colisiones con paredes
         for pared in paredes:
@@ -59,5 +56,10 @@ class Warrior(Personaje):
         """Dibuja al guerrero y su espada."""
         # Llama al método `dibujar` de la clase `Personaje`
         super().dibujar(superficie)
+        
         # Dibuja la espada
-        pygame.draw.rect(superficie, (255, 255, 255, 0.9), self.sword)
+        if self.sword_direction in ["left", "right"]:
+            pygame.draw.rect(superficie, (255, 255, 255,), self.horizontal_sword) # horizontal
+        
+        elif self.sword_direction in ["up", "down"]:
+            pygame.draw.rect(superficie, (255, 255, 255,), self.vertical_sword) #vertical
