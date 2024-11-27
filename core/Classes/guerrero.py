@@ -13,7 +13,7 @@ class Warrior(Personaje):
 
         posicion_original = self.rect.copy()
 
-        if keys[pygame.K_a]:  # Izquierda
+        if keys[pygame.K_LEFT]:  # Izquierda
             self.rect.x -= self.speed
             self.horizontal_sword.topleft = (
                 self.rect.x - self.horizontal_sword.width + 13,
@@ -21,7 +21,7 @@ class Warrior(Personaje):
             )
             self.sword_direction = "left"
 
-        if keys[pygame.K_d]:  # Derecha
+        if keys[pygame.K_RIGHT]:  # Derecha
             self.rect.x += self.speed
             self.horizontal_sword.topleft = (
                 self.rect.x + self.rect.width - 13,
@@ -29,7 +29,7 @@ class Warrior(Personaje):
             )
             self.sword_direction = "right"
 
-        if keys[pygame.K_w]:  # Arriba
+        if keys[pygame.K_UP]:  # Arriba
             self.rect.y -= self.speed
             self.vertical_sword.topleft = (
                 self.rect.x + self.rect.width // 2 - self.vertical_sword.width // 2,
@@ -37,7 +37,7 @@ class Warrior(Personaje):
             )
             self.sword_direction = "up"
 
-        if keys[pygame.K_s]:  # Abajo
+        if keys[pygame.K_DOWN]:  # Abajo
             self.rect.y += self.speed
             self.vertical_sword.topleft = (
                 self.rect.x + self.rect.width // 2 - self.vertical_sword.width // 2,

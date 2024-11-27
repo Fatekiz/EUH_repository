@@ -131,7 +131,7 @@ def main():
         global ultimo_ataque
         tiempo_actual = pygame.time.get_ticks()
 
-        if keys[pygame.K_e]:
+        if keys[pygame.K_l]:
             if tiempo_actual - ultimo_ataque >= cooldown:
                 for npc in hongos:
                     if bananirou.horizontal_sword.colliderect(npc.rect):
