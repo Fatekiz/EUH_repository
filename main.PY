@@ -23,7 +23,7 @@ screen = pygame.display.set_mode((win_x,win_y))
 bananirou = Warrior(sprite_warrior,health=100, dmg= 15, speed= 5) # personaje
 
 
-hongo_image = pygame.image.load("assets/images/señor hongo.gif")
+hongo_image = pygame.image.load("assets\images\hongo.gif")
 hongos = pygame.sprite.Group()
 for i in range(20):
     hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
@@ -107,6 +107,7 @@ def main():
     ]
 
     # Bucle principal del juego
+    # Bucle principal del juego
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -117,14 +118,13 @@ def main():
         bananirou.dibujar(screen)
         bananirou.dibujar_barra_salud(screen)
 
-        """" Dibujar paredes (DEPURACIÓN)"""
-        #for pared in paredes:
-            #pygame.draw.rect(screen, (255, 0, 0), pared)
-        
+        # Dibujar paredes (opcional para depuración)
+        # for pared in paredes:
+        #     pygame.draw.rect(screen, (255, 0, 0), pared)
 
         # Actualizar y dibujar hongos
-        hongos.update()
         for hongo in hongos:
+            hongo.update(paredes)  # Pasamos las paredes
             hongo.dibujar(screen)
 
         # Detectar colisiones
@@ -152,6 +152,7 @@ def main():
         bananirou.movimiento(keys, paredes)
         pygame.display.flip()
         fps.tick(60)
+
 
 
 
