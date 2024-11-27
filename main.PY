@@ -1,4 +1,5 @@
 import pygame
+import random
 import sys
 from config.settings import *
 from core.Classes.guerrero import *
