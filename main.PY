@@ -24,7 +24,7 @@ screen = pygame.display.set_mode((win_x,win_y))
 bananirou = Warrior(sprite_warrior,health=100, dmg= 15, speed= 5) # personaje
 
 
-hongo_image = pygame.image.load("assets\images\hongo.gif")
+hongo_image = pygame.image.load("assets/images/enemigos/hongo.png")
 queilino_image= pygame.image.load("assets/images/enemigos/queilino.png")
 hongos = pygame.sprite.Group()
 for i in range(20):
@@ -134,7 +134,7 @@ def mapa_1():
             global ultimo_ataque
             tiempo_actual = pygame.time.get_ticks()
 
-            if keys[pygame.K_l]:
+            if keys[pygame.K_a]:
                 if tiempo_actual - ultimo_ataque >= cooldown:
                     for npc in list(hongos):  # Convertimos a lista para evitar errores al eliminar
                         if bananirou.horizontal_sword.colliderect(npc.rect) or bananirou.vertical_sword.colliderect(npc.rect):
@@ -155,7 +155,7 @@ def mapa_1():
 
             # Dibujar el contador de enemigos eliminados
             font = pygame.font.Font(None, 36)
-            texto_contador = font.render(f"Eliminados: {enemigos_eliminados}", True, (255, 255, 255))
+            texto_contador = font.render(f"Eliminados: {enemigos_eliminados} - Oleada {oleada_actual}", True, (255, 255, 255))
             screen.blit(texto_contador, (10, 10))  # Posición en la esquina superior izquierda
 
             pygame.display.flip()
@@ -179,6 +179,7 @@ def mapa_2():
     oleada_actual = 1
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
+    bananirou = Warrior(sprite_warrior, health=100, dmg=15, speed=5)
     # Define las paredes del mapa
     paredes = [
             pygame.Rect(0, 0, 1280, 1),  # Coordenadas para la pared superior
@@ -249,11 +250,6 @@ def mapa_2():
             pygame.display.flip()
             fps.tick(60)
 
-        # Fin de la oleada
-        if oleada_actual==2 or oleada_actual==3:
-            texto_vida= font.render(f"VIDA RESTAURADA! OLEADA {oleada_actual}", True, (255,255,255))
-            screen.blit(texto_vida, (500,500))
-            pygame.time.wait(2000)
         oleada_actual += 1
         bananirou.health = 100
 
@@ -286,4 +282,4 @@ def menu_final():
 
         
 mostrar_menu()
-mapa_2()
+mapa_1()
