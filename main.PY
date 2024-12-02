@@ -12,9 +12,10 @@ pygame.init()
 sprite_warrior=pygame.image.load("assets/images/personajes/warrior.pos1.png")
 
 mapa= Map("assets/images/mapa1.png",scale=(win_x,win_y))
+mapa2= Map("assets/images/mapa2.jpg", scale=(win_x,win_y))
 
     # Variables para el cooldown
-cooldown = 1000  # CD ATAQUE 
+cooldown = 100  # CD ATAQUE 
 
 ultimo_ataque= 0  # Al principio no ha habido ataques
 
@@ -24,6 +25,7 @@ bananirou = Warrior(sprite_warrior,health=100, dmg= 15, speed= 5) # personaje
 
 
 hongo_image = pygame.image.load("assets\images\hongo.gif")
+queilino_image= pygame.image.load("assets/images/enemigos/queilino.png")
 hongos = pygame.sprite.Group()
 for i in range(20):
     hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
@@ -76,82 +78,184 @@ def mostrar_menu():
 
 # orden = pygame.Rect(x,y,ancho,largo)
 
-def main():
-    global bananirou, hongos  # Si son variables globales
+def mapa_1():
+    global bananirou, hongos
+
+    # Configuración inicial
+    num_oleadas = 3  # Total de oleadas
+    enemigos_por_oleada = 10
+    oleada_actual = 1
+    enemigos_eliminados = 0  # Contador de enemigos eliminados
 
     # Reinicia al jugador
     bananirou = Warrior(sprite_warrior, health=100, dmg=15, speed=5)
 
-    # Reinicia los hongos
-    global hongos
-    hongos = pygame.sprite.Group()
-    for i in range(20):
-        hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
-        hongos.add(hongo)
+    # Define las paredes del mapa
+    paredes = [
+        pygame.Rect(0, 105, 40, 50),
+        pygame.Rect(40, -80, 230, 50),
+        pygame.Rect(260, 105, 230, 50),
+        pygame.Rect(480, -80, 300, 50),
+        pygame.Rect(776, 105, 600, 50),
+        pygame.Rect(-10, -30, 50, 140),
+        pygame.Rect(260, -30, 50, 140),
+        pygame.Rect(440, -30, 50, 140),
+        pygame.Rect(776, -30, 50, 140),
+        pygame.Rect(1150, 0, 50, 580),
+        pygame.Rect(1150, 800, 50, 580),
+        pygame.Rect(-70, 0, 50, 960),
+        pygame.Rect(0, 960, 1280, 50),
+    ]
+
+    while oleada_actual <= num_oleadas:
+        
+        # Generar enemigos para la oleada actual
+        hongos = pygame.sprite.Group()
+        for i in range(enemigos_por_oleada):
+            hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
+            hongos.add(hongo)
+
+        while len(hongos) > 0:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+
+            # Dibujar mapa, personaje y enemigos
+            mapa.dibujar(screen)
+            bananirou.dibujar(screen)
+            bananirou.dibujar_barra_salud(screen)
+            
+            for hongo in hongos:
+                hongo.update(paredes)
+                hongo.dibujar(screen)
+
+            # Detectar colisiones y ataques
+            keys = pygame.key.get_pressed()
+            global ultimo_ataque
+            tiempo_actual = pygame.time.get_ticks()
+
+            if keys[pygame.K_l]:
+                if tiempo_actual - ultimo_ataque >= cooldown:
+                    for npc in list(hongos):  # Convertimos a lista para evitar errores al eliminar
+                        if bananirou.horizontal_sword.colliderect(npc.rect) or bananirou.vertical_sword.colliderect(npc.rect):
+                            npc.recibir_daño_npc(bananirou.dmg)
+                            if npc.health <= 0:
+                                hongos.remove(npc)
+                                enemigos_eliminados += 1  # Incrementa el contador
+                            ultimo_ataque = tiempo_actual
+
+            for npc in hongos:
+                if bananirou.rect.colliderect(npc.rect):
+                    bananirou.recibir_daño_personaje(npc.dmg)
+                    if bananirou.health <= 0:
+                        menu_final()
+
+            # Movimiento del personaje
+            bananirou.movimiento(keys, paredes)
+
+            # Dibujar el contador de enemigos eliminados
+            font = pygame.font.Font(None, 36)
+            texto_contador = font.render(f"Eliminados: {enemigos_eliminados}", True, (255, 255, 255))
+            screen.blit(texto_contador, (10, 10))  # Posición en la esquina superior izquierda
+
+            pygame.display.flip()
+            fps.tick(60)
+
+        # Fin de la oleada
+        oleada_actual += 1
+        bananirou.health = 100
+
+
+    mapa_2()
+
+
+def mapa_2():
+
+    global bananirou, hongos
+
+    # Configuración inicial
+    num_oleadas = 3  # Total de oleadas
+    enemigos_por_oleada = 10
+    oleada_actual = 1
+    enemigos_eliminados = 0  # Contador de enemigos eliminados
 
     # Define las paredes del mapa
     paredes = [
-        pygame.Rect(0, 105, 40, 50),  # Pared TOP 1
-        pygame.Rect(40, -80, 230, 50),  # Pared TOP 1.1
-        pygame.Rect(260, 105, 230, 50),  # Pared TOP 2
-        pygame.Rect(480, -80, 300, 50),  # Pared TOP 2.1
-        pygame.Rect(776, 105, 600, 50),  # Pared TOP 3
-        pygame.Rect(-10, -30, 50, 140),  # Pared TOP_LEFT 1
-        pygame.Rect(260, -30, 50, 140),  # Pared TOP_LEFT 2
-        pygame.Rect(440, -30, 50, 140),  # Pared TOP_RIGHT 1
-        pygame.Rect(776, -30, 50, 140),  # Pared TOP_RIGHT 2
-        pygame.Rect(1150, 0, 50, 580),  # Pared RIGHT 1saae
-        pygame.Rect(1150, 800, 50, 580),  # Pared RIGHT 2
-        pygame.Rect(-70, 0, 50, 960),  # Pared LEFT 1
-        pygame.Rect(0, 960,1280, 50),  # Pared DOWN 2
+            pygame.Rect(0, 0, 1280, 1),  # Coordenadas para la pared superior
+
+            # Pared izquierda
+            pygame.Rect(0, 0, 1, 960),  # Coordenadas para la pared izquierda
+
+            # Pared inferior
+            pygame.Rect(0, 959, 1280, 1),  # Coordenadas para la pared inferior
+
+            # Pared derecha
+            pygame.Rect(1279, 0, 1, 960),  # Coordenadas para la pared derecha
     ]
 
-    # Bucle principal del juego
-    # Bucle principal del juego
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
+    while oleada_actual <= num_oleadas:
+        
+        # Generar enemigos para la oleada actual
+        hongos = pygame.sprite.Group()
+        for i in range(enemigos_por_oleada):
+            hongo = Hongo(queilino_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
+            hongos.add(hongo)
 
-        # Dibujar mapa y personajes
-        mapa.dibujar(screen)
-        bananirou.dibujar(screen)
-        bananirou.dibujar_barra_salud(screen)
+        while len(hongos) > 0:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
 
-        # Dibujar paredes (opcional para depuración)
-        # for pared in paredes:
-        #     pygame.draw.rect(screen, (255, 0, 0), pared)
+            # Dibujar mapa, personaje y enemigos
+            mapa2.dibujar(screen)
+            bananirou.dibujar(screen)
+            bananirou.dibujar_barra_salud(screen)
+            
+            for pared in paredes:
+                pygame.draw.rect(screen, (255, 0, 0), pared)
+            for hongo in hongos:
+                hongo.update(paredes)
+                hongo.dibujar(screen)
 
-        # Actualizar y dibujar hongos
-        for hongo in hongos:
-            hongo.update(paredes)  # Pasamos las paredes
-            hongo.dibujar(screen)
+            # Detectar colisiones y ataques
+            keys = pygame.key.get_pressed()
+            global ultimo_ataque
+            tiempo_actual = pygame.time.get_ticks()
 
-        # Detectar colisiones
-        keys = pygame.key.get_pressed()
-        global ultimo_ataque
-        tiempo_actual = pygame.time.get_ticks()
+            if keys[pygame.K_l]:
+                if tiempo_actual - ultimo_ataque >= cooldown:
+                    for npc in list(hongos):  # Convertimos a lista para evitar errores al eliminar
+                        if bananirou.horizontal_sword.colliderect(npc.rect) or bananirou.vertical_sword.colliderect(npc.rect):
+                            npc.recibir_daño_npc(bananirou.dmg)
+                            if npc.health <= 0:
+                                hongos.remove(npc)
+                                enemigos_eliminados += 1  # Incrementa el contador
+                            ultimo_ataque = tiempo_actual
 
-        if keys[pygame.K_l]:
-            if tiempo_actual - ultimo_ataque >= cooldown:
-                for npc in hongos:
-                    if bananirou.horizontal_sword.colliderect(npc.rect):
-                        npc.recibir_daño_npc(bananirou.dmg)
-                        ultimo_ataque = tiempo_actual
-                    elif bananirou.vertical_sword.colliderect(npc.rect):
-                        npc.recibir_daño_npc(bananirou.dmg)
-                        ultimo_ataque = tiempo_actual
+            for npc in hongos:
+                if bananirou.rect.colliderect(npc.rect):
+                    bananirou.recibir_daño_personaje(npc.dmg)
+                    if bananirou.health <= 0:
+                        menu_final()
 
-        for npc in hongos:
-            if bananirou.rect.colliderect(npc.rect):
-                bananirou.recibir_daño_personaje(npc.dmg)
-                if bananirou.health <= 0:
-                    menu_final()
+            # Movimiento del personaje
+            bananirou.movimiento(keys, paredes)
 
-        # Movimiento del personaje
-        bananirou.movimiento(keys, paredes)
-        pygame.display.flip()
-        fps.tick(60)
+            # Dibujar el contador de enemigos eliminados
+            font = pygame.font.Font(None, 36)
+            texto_contador = font.render(f"Eliminados: {enemigos_eliminados}", True, (255, 255, 255))
+            screen.blit(texto_contador, (10, 10))  # Posición en la esquina superior izquierda
+
+            pygame.display.flip()
+            fps.tick(60)
+
+        # Fin de la oleada
+        if oleada_actual==2 or oleada_actual==3:
+            texto_vida= font.render(f"VIDA RESTAURADA! OLEADA {oleada_actual}", True, (255,255,255))
+            screen.blit(texto_vida, (500,500))
+            pygame.time.wait(2000)
+        oleada_actual += 1
+        bananirou.health = 100
 
 
 
@@ -171,7 +275,7 @@ def menu_final():
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 # Verificar si el clic está dentro del área del botón
                 if boton_play_rect2.collidepoint(evento.pos):  # Si el clic está dentro del botón
-                    main()  # Reinicia el juego
+                    mapa_1()  # Reinicia el juego
 
         # Dibujar el botón "Reintentar"
         screen.blit(boton_play_img2, boton_play_rect2)
@@ -182,4 +286,4 @@ def menu_final():
 
         
 mostrar_menu()
-main()
+mapa_2()
