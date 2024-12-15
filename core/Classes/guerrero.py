@@ -2,18 +2,20 @@ import pygame
 from core.Classes.personaje import Personaje
 
 class Warrior(Personaje):
-    def __init__(self, sprites, health, dmg, speed, position=(100, 100)):
+    def __init__(self, sprites, sword_images, health, dmg, speed, position=(100, 100)):
         super().__init__(sprites["right"][0], health, dmg, speed, position)  # Usa el primer sprite como inicial
-        self.sprites = sprites  # Guarda el diccionario de sprites
+        self.sprites = sprites  # Diccionario de sprites para cada dirección
+        self.sword_images = sword_images  # Diccionario de imágenes de la espada
         self.current_sprite = 0  # Índice del sprite actual
-        self.horizontal_sword = pygame.Rect(0, 0, 55, 15)  # Espada horizontal
-        self.vertical_sword = pygame.Rect(0, 0, 15, 55)  # Espada vertical
+        self.horizontal_sword = pygame.Rect(0, 0, 50, 50)  # Espada horizontal
+        self.vertical_sword = pygame.Rect(0, 0, 50, 50)  # Espada vertical
         self.sword_direction = "right"  # Dirección inicial de la espada
 
     def movimiento(self, keys, paredes):
-        """Movimiento del guerrero, posición de la espada y colisiones"""
+        """Movimiento del guerrero, posición de la espada y colisiones."""
         posicion_original = self.rect.copy()
 
+        # Movimiento hacia la izquierda
         if keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
             self.horizontal_sword.topleft = (
@@ -23,7 +25,8 @@ class Warrior(Personaje):
             self.sword_direction = "left"
             self.image = self.sprites["left"][self.current_sprite // 10]
 
-        if keys[pygame.K_RIGHT]:
+        # Movimiento hacia la derecha
+        elif keys[pygame.K_RIGHT]:
             self.rect.x += self.speed
             self.horizontal_sword.topleft = (
                 self.rect.x + self.rect.width - 13,
@@ -32,7 +35,8 @@ class Warrior(Personaje):
             self.sword_direction = "right"
             self.image = self.sprites["right"][self.current_sprite // 10]
 
-        if keys[pygame.K_UP]:
+        # Movimiento hacia arriba
+        elif keys[pygame.K_UP]:
             self.rect.y -= self.speed
             self.vertical_sword.topleft = (
                 self.rect.x + self.rect.width // 2 - self.vertical_sword.width // 2,
@@ -40,7 +44,8 @@ class Warrior(Personaje):
             )
             self.sword_direction = "up"
 
-        if keys[pygame.K_DOWN]:
+        # Movimiento hacia abajo
+        elif keys[pygame.K_DOWN]:
             self.rect.y += self.speed
             self.vertical_sword.topleft = (
                 self.rect.x + self.rect.width // 2 - self.vertical_sword.width // 2,
@@ -48,10 +53,11 @@ class Warrior(Personaje):
             )
             self.sword_direction = "down"
 
-        # Animación del sprite
-        self.current_sprite += 1
-        if self.current_sprite >= len(self.sprites["right"]) * 10:
-            self.current_sprite = 0
+        # Animación del sprite solo para movimientos horizontales
+        if keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]:
+            self.current_sprite += 1
+            if self.current_sprite >= len(self.sprites["right"]) * 10:
+                self.current_sprite = 0
 
         # Detectar colisiones con paredes
         for pared in paredes:
@@ -60,8 +66,12 @@ class Warrior(Personaje):
 
     def dibujar(self, superficie):
         """Dibuja al guerrero y su espada."""
-        super().dibujar(superficie)
-        if self.sword_direction in ["left", "right"]:
-            pygame.draw.rect(superficie, (255, 255, 255), self.horizontal_sword)
-        elif self.sword_direction in ["up", "down"]:
-            pygame.draw.rect(superficie, (255, 255, 255), self.vertical_sword)
+        # Dibujar al guerrero
+        superficie.blit(self.image, self.rect.topleft)
+
+        # Dibujar la espada según la dirección
+        if self.sword_direction in self.sword_images:
+            if self.sword_direction in ["left", "right"]:
+                superficie.blit(self.sword_images[self.sword_direction], self.horizontal_sword.topleft)
+            elif self.sword_direction in ["up", "down"]:
+                superficie.blit(self.sword_images[self.sword_direction], self.vertical_sword.topleft)

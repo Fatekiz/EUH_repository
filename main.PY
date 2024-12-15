@@ -17,9 +17,26 @@ cooldown = 100  # CD ATAQUE
 global ultimo_ataque
 ultimo_ataque= 0  # Al principio no ha habido ataques
 
-# SPRITES WARRIOR
-sprite_warrior = pygame.image.load("assets/images/personajes/warrior.pos1.png")
+sprites = {
+    "left": [
+        pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/mov1izquierda.png"),(60,60)),
+        pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/mov2izquierda.png"),(60,60)),],
+    "right": [
+        pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/mov1derecha.png"),(60,60)),
+        pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/mov2derecha.png"),(60,60)),],
+    "up": [],
+    "down": [],
+}
 
+sword_images = {
+    "left": pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/sword4.png"), (50, 50)),
+    "right": pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/sword2.png"), (50, 50)),
+    "up": pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/sword1.png"), (50, 50)),
+    "down": pygame.transform.scale(pygame.image.load("assets/images/personajes/warrior/sword3.png"), (50, 50)),
+}
+
+
+bananirou= Warrior(sprites, sword_images, health=100, dmg=10, speed=5)
 
 # Cargar las imágenes originales
 sprite_1 = pygame.image.load("assets/images/personajes/warrior/mov1derecha.png")
@@ -36,34 +53,18 @@ nuevo_ancho = sprite_1.get_width() * 3
 nuevo_alto = sprite_1.get_height() * 3
 
 # Redimensionar los sprites
-sprites_warrior = {
-    "right": [
-        pygame.transform.scale(sprite_1, (nuevo_ancho, nuevo_alto)),
-        pygame.transform.scale(sprite_2, (nuevo_ancho, nuevo_alto)),
-        pygame.transform.scale(sprite_3, (nuevo_ancho, nuevo_alto)),
-        pygame.transform.scale(sprite_4, (nuevo_ancho, nuevo_alto)),
-    ],
-    "left": [
-        pygame.transform.scale(sprite_5, (nuevo_ancho, nuevo_alto)),
-        pygame.transform.scale(sprite_6, (nuevo_ancho, nuevo_alto)),
-        pygame.transform.scale(sprite_7, (nuevo_ancho, nuevo_alto)),
-        pygame.transform.scale(sprite_8, (nuevo_ancho, nuevo_alto)),
-    ],
-}
+
 
 
 fps= pygame.time.Clock()
 screen = pygame.display.set_mode((win_x,win_y))
-bananirou = Warrior(sprites_warrior, health=100, dmg=15, speed=5)  # personaje
+
 
 
 
 hongo_image = pygame.image.load("assets/images/enemigos/hongo.png")
 queilino_image= pygame.image.load("assets/images/enemigos/queilino.png")
 hongos = pygame.sprite.Group()
-for i in range(20):
-    hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
-    hongos.add(hongo)
 
 # Cargar imágenes
 fondo_menu = pygame.image.load("assets/images/menu.png")  # Imagen de fondo del menú
@@ -116,7 +117,8 @@ def mapa_1():
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
     # Reinicia al jugador
-    bananirou = Warrior(sprites_warrior, health=100, dmg=15, speed=5)
+
+    bananirou= Warrior(sprites, sword_images, health=100, dmg=10, speed=5)
 
     # Define las paredes del mapa
     paredes = [
@@ -140,7 +142,7 @@ def mapa_1():
         # Generar enemigos para la oleada actual
         hongos = pygame.sprite.Group()
         for i in range(enemigos_por_oleada):
-            hongo = Hongo(hongo_image, speed=1, position=(random.randint(0, 800), random.randint(0, 600)))
+            hongo = Hongo(hongo_image, speed=1, position=(random.randint(500, 900), random.randint(500, 900)))
             hongos.add(hongo)
 
         while len(hongos) > 0:
@@ -207,7 +209,8 @@ def mapa_2():
     oleada_actual = 1
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
-    bananirou = Warrior(sprites_warrior, health=100, dmg=15, speed=5)
+
+    bananirou= Warrior(sprites, sword_images, health=100, dmg=10, speed=5)
     # Define las paredes del mapa
     paredes = [
             pygame.Rect(0, 0, 1280, 1),  # Coordenadas para la pared superior
@@ -251,7 +254,7 @@ def mapa_2():
             global ultimo_ataque
             tiempo_actual = pygame.time.get_ticks()
 
-            if keys[pygame.K_l]:
+            if keys[pygame.K_a]:
                 if tiempo_actual - ultimo_ataque >= cooldown:
                     for npc in list(hongos):  # Convertimos a lista para evitar errores al eliminar
                         if bananirou.horizontal_sword.colliderect(npc.rect) or bananirou.vertical_sword.colliderect(npc.rect):
