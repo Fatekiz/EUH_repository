@@ -8,20 +8,54 @@ from core.map import *
 
 pygame.init()
 
-###LOADS IMAGES
-sprite_warrior=pygame.image.load("assets/images/personajes/warrior.pos1.png")
 
 mapa= Map("assets/images/mapa1.png",scale=(win_x,win_y))
 mapa2= Map("assets/images/mapa2.jpg", scale=(win_x,win_y))
 
     # Variables para el cooldown
 cooldown = 100  # CD ATAQUE 
-
+global ultimo_ataque
 ultimo_ataque= 0  # Al principio no ha habido ataques
+
+# SPRITES WARRIOR
+sprite_warrior = pygame.image.load("assets/images/personajes/warrior.pos1.png")
+
+
+# Cargar las imágenes originales
+sprite_1 = pygame.image.load("assets/images/personajes/warrior/mov1derecha.png")
+sprite_2 = pygame.image.load("assets/images/personajes/warrior/mov2derecha.png")
+sprite_3 = pygame.image.load("assets/images/personajes/warrior/mov3derecha.png")
+sprite_4 = pygame.image.load("assets/images/personajes/warrior/mov4derecha.png")
+sprite_5 = pygame.image.load("assets/images/personajes/warrior/mov1izquierda.png")
+sprite_6 = pygame.image.load("assets/images/personajes/warrior/mov2izquierda.png")
+sprite_7 = pygame.image.load("assets/images/personajes/warrior/mov3izquierda.png")
+sprite_8 = pygame.image.load("assets/images/personajes/warrior/mov4izquierda.png")
+
+# Calcular las nuevas dimensiones (duplicar tamaño)
+nuevo_ancho = sprite_1.get_width() * 3
+nuevo_alto = sprite_1.get_height() * 3
+
+# Redimensionar los sprites
+sprites_warrior = {
+    "right": [
+        pygame.transform.scale(sprite_1, (nuevo_ancho, nuevo_alto)),
+        pygame.transform.scale(sprite_2, (nuevo_ancho, nuevo_alto)),
+        pygame.transform.scale(sprite_3, (nuevo_ancho, nuevo_alto)),
+        pygame.transform.scale(sprite_4, (nuevo_ancho, nuevo_alto)),
+    ],
+    "left": [
+        pygame.transform.scale(sprite_5, (nuevo_ancho, nuevo_alto)),
+        pygame.transform.scale(sprite_6, (nuevo_ancho, nuevo_alto)),
+        pygame.transform.scale(sprite_7, (nuevo_ancho, nuevo_alto)),
+        pygame.transform.scale(sprite_8, (nuevo_ancho, nuevo_alto)),
+    ],
+}
+
 
 fps= pygame.time.Clock()
 screen = pygame.display.set_mode((win_x,win_y))
-bananirou = Warrior(sprite_warrior,health=100, dmg= 15, speed= 5) # personaje
+bananirou = Warrior(sprites_warrior, health=100, dmg=15, speed=5)  # personaje
+
 
 
 hongo_image = pygame.image.load("assets/images/enemigos/hongo.png")
@@ -43,12 +77,6 @@ pygame.display.set_caption("EL ULTIMO HEROE.")
 fondo_menu_final= pygame.image.load("assets/images/menu_final.png")
 boton_play_img2 = pygame.image.load("assets/images/boton_reintentar.png")  # Imagen del botón "Play"
 boton_play_rect2 = boton_play_img.get_rect(center=(540, 800))  # Posición del botón
-
-
-
-
-
-
 
 
 def mostrar_menu():
@@ -88,7 +116,7 @@ def mapa_1():
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
     # Reinicia al jugador
-    bananirou = Warrior(sprite_warrior, health=100, dmg=15, speed=5)
+    bananirou = Warrior(sprites_warrior, health=100, dmg=15, speed=5)
 
     # Define las paredes del mapa
     paredes = [
@@ -179,7 +207,7 @@ def mapa_2():
     oleada_actual = 1
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
-    bananirou = Warrior(sprite_warrior, health=100, dmg=15, speed=5)
+    bananirou = Warrior(sprites_warrior, health=100, dmg=15, speed=5)
     # Define las paredes del mapa
     paredes = [
             pygame.Rect(0, 0, 1280, 1),  # Coordenadas para la pared superior
