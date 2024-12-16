@@ -4,6 +4,7 @@ import sys
 from config.settings import *
 from core.Classes.guerrero import *
 from core.Classes.hongo import *
+from core.Classes.loboBoss import *
 from core.map import *
 
 pygame.init()
@@ -60,7 +61,9 @@ fps= pygame.time.Clock()
 screen = pygame.display.set_mode((win_x,win_y))
 
 
-
+lobo_images = [
+    pygame.image.load(f"assets/images/personajes/Wolf/wolf_attack{i}.png") for i in range(1, 6)
+]  # Sprites del lobo
 
 hongo_image = pygame.image.load("assets/images/enemigos/hongo.png")
 queilino_image= pygame.image.load("assets/images/enemigos/queilino.png")
@@ -134,9 +137,9 @@ def mapa_1():
     global bananirou, hongos
 
     # Configuración inicial
-    num_oleadas = 3  # Total de oleadas
+    num_oleadas = 2  # Total de oleadas
     enemigos_por_oleada = 10
-    oleada_actual = 1
+    oleada_actual = 2
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
     # Reinicia al jugador
@@ -187,7 +190,7 @@ def mapa_1():
             global ultimo_ataque
             tiempo_actual = pygame.time.get_ticks()
 
-            if keys[pygame.K_a]:
+            if keys[pygame.K_e]:
                 if tiempo_actual - ultimo_ataque >= cooldown:
                     for npc in list(hongos):  # Convertimos a lista para evitar errores al eliminar
                         if bananirou.horizontal_sword.colliderect(npc.rect) or bananirou.vertical_sword.colliderect(npc.rect):
@@ -223,30 +226,26 @@ def mapa_1():
 
 
 def mapa_2():
-
     global bananirou, hongos
 
     # Configuración inicial
-    num_oleadas = 3  # Total de oleadas
+    num_oleadas = 2  # Total de oleadas
     enemigos_por_oleada = 10
     oleada_actual = 1
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
-
-    bananirou= Warrior(sprites, sword_images, health=100, dmg=10, speed=5)
+    bananirou = Warrior(sprites, sword_images, health=100, dmg=10, speed=5)
+    
     # Define las paredes del mapa
     paredes = [
-            pygame.Rect(0, 0, 1280, 1),  # Coordenadas para la pared superior
-
-            # Pared izquierda
-            pygame.Rect(0, 0, 1, 960),  # Coordenadas para la pared izquierda
-
-            # Pared inferior
-            pygame.Rect(0, 959, 1280, 1),  # Coordenadas para la pared inferior
-
-            # Pared derecha
-            pygame.Rect(1279, 0, 1, 960),  # Coordenadas para la pared derecha
+        pygame.Rect(0, 0, 1280, 1),  # Coordenadas para la pared superior
+        pygame.Rect(0, 0, 1, 960),  # Coordenadas para la pared izquierda
+        pygame.Rect(0, 959, 1280, 1),  # Coordenadas para la pared inferior
+        pygame.Rect(1279, 0, 1, 960),  # Coordenadas para la pared derecha
     ]
+
+    # Variable para el BossLobo
+    boss_lobo = None
 
     while oleada_actual <= num_oleadas:
         
@@ -277,7 +276,7 @@ def mapa_2():
             global ultimo_ataque
             tiempo_actual = pygame.time.get_ticks()
 
-            if keys[pygame.K_a]:
+            if keys[pygame.K_e]:
                 if tiempo_actual - ultimo_ataque >= cooldown:
                     for npc in list(hongos):  # Convertimos a lista para evitar errores al eliminar
                         if bananirou.horizontal_sword.colliderect(npc.rect) or bananirou.vertical_sword.colliderect(npc.rect):
@@ -304,9 +303,58 @@ def mapa_2():
             pygame.display.flip()
             fps.tick(60)
 
+        # Al terminar la oleada, crear al BossLobo
+        if oleada_actual == num_oleadas:
+            img_boss_lobo = pygame.image.load("assets/images/personajes/Wolf/wolf_pos1.png").convert_alpha()
+
+            if img_boss_lobo is None:
+                print("Error al cargar la imagen del BossLobo")
+            boss_lobo = BossLobo(img=img_boss_lobo, speed=5, position=(500, 300), health=200, dmg=20)
+
+            if boss_lobo:
+                print("Actualizando BossLobo")
+                boss_lobo.update(paredes)
+                boss_lobo.dibujar(screen)
+
+
+            boss_lobo.target = bananirou  # Asignar al personaje como objetivo
+            enemigos_eliminados = 0  # Reiniciar el contador de enemigos eliminados
+
+        # Si el BossLobo está en el juego, actualizarlo
+        
+
+            # Dibujar mapa, personaje y BossLobo
+            mapa2.dibujar(screen)
+            bananirou.dibujar(screen)
+            bananirou.dibujar_barra_salud(screen)
+            boss_lobo.update(paredes)
+            boss_lobo.dibujar(screen)
+
+            # Detectar colisiones y daño entre el BossLobo y el personaje
+            if boss_lobo.rect.colliderect(bananirou.rect):
+                print("Colisión con BossLobo")
+                bananirou.recibir_daño_personaje(boss_lobo.dmg)
+                if bananirou.health <= 0:
+                    print("El jugador ha muerto")
+                    menu_final()
+
+
+            # Dibujar el contador de enemigos eliminados
+            font = pygame.font.Font(None, 36)
+            texto_contador = font.render(f"Eliminados: {enemigos_eliminados}", True, (255, 255, 255))
+            screen.blit(texto_contador, (10, 10))  # Posición en la esquina superior izquierda
+
+            pygame.display.flip()
+            fps.tick(60)
+
         oleada_actual += 1
         bananirou.health = 100
 
+        try:
+            boss_lobo.update(paredes)
+            boss_lobo.dibujar(screen)
+        except Exception as e:
+            print(f"Error al actualizar o dibujar el BossLobo: {e}")
 
 
 

@@ -20,15 +20,11 @@ class NPC(Personaje):
             self.kill()
 
     def handle_wall_collision(self, paredes):
-        """Detecta colisiones con las paredes y cambia de dirección."""
         for pared in paredes:
             if self.rect.colliderect(pared):
-                # Invertir dirección al chocar
-                if self.direction[0] != 0:  # Movimiento horizontal
-                    self.direction = (-self.direction[0], self.direction[1])
-                if self.direction[1] != 0:  # Movimiento vertical
-                    self.direction = (self.direction[0], -self.direction[1])
-                break  # Salimos del loop para evitar múltiples cambios en un frame
+                self.direction = self.random_direction()
+                break
+  # Salimos del loop para evitar múltiples cambios en un frame
 
     def update(self, paredes):
         """Actualiza la posición y maneja colisiones."""
