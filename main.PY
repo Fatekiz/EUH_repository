@@ -79,6 +79,9 @@ fondo_menu_final= pygame.image.load("assets/images/menu_final.png")
 boton_play_img2 = pygame.image.load("assets/images/boton_reintentar.png")  # Imagen del botón "Play"
 boton_play_rect2 = boton_play_img.get_rect(center=(540, 800))  # Posición del botón
 
+fuente = pygame.font.SysFont("Arial", 25)
+texto_play = fuente.render("Presiona Enter para Jugar", True, NEGRO)
+fondo_controles= pygame.image.load("assets/images/controles.png")
 
 def mostrar_menu():
     while True:
@@ -102,6 +105,26 @@ def mostrar_menu():
         pygame.display.update()
 
 
+def controles():
+    while True:
+        # Rellenar la pantalla con el fondo (puedes cambiarlo por una imagen)
+        screen.blit(fondo_controles, (0, 0))
+
+        # Detectar eventos
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_RETURN:  # Si presionan Enter, empieza el juego
+                    return  # Sale de la función y comienza el juego
+
+        # Dibujar el texto de "Presiona Enter"
+        screen.blit(texto_play, (win_x // 2 - texto_play.get_width() // 2, win_y // 2 - texto_play.get_height() // 2))
+
+        # Actualizar la pantalla
+        pygame.display.update()
 
 
 
@@ -313,4 +336,5 @@ def menu_final():
 
         
 mostrar_menu()
+controles()
 mapa_1()
