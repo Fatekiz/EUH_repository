@@ -137,9 +137,9 @@ def mapa_1():
     global bananirou, hongos
 
     # Configuración inicial
-    num_oleadas = 2  # Total de oleadas
+    num_oleadas = 3  # Total de oleadas
     enemigos_por_oleada = 10
-    oleada_actual = 2
+    oleada_actual = 1
     enemigos_eliminados = 0  # Contador de enemigos eliminados
 
     # Reinicia al jugador
@@ -305,7 +305,7 @@ def mapa_2():
 
         # Al terminar la oleada, crear al BossLobo
         if oleada_actual == num_oleadas:
-            img_boss_lobo = pygame.image.load("assets/images/personajes/Wolf/wolf_pos1.png").convert_alpha()
+            img_boss_lobo = pygame.image.load("assets/images/personajes/Wolf/wolf_pos1.png")
 
             if img_boss_lobo is None:
                 print("Error al cargar la imagen del BossLobo")

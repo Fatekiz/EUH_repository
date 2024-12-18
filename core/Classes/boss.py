@@ -1,6 +1,6 @@
 import pygame
 
-class NPC:
+class NPC():
     def __init__(self, x, y, velocidad):
         self.x = x
         self.y = y
